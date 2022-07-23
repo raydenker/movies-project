@@ -5,7 +5,7 @@ function Footer() {
             <div className="footer-copyright light-blue darken-4">
                 <div className="container">
                     © {new Date().getFullYear()} Copyright Text
-                    <a className="grey-text text-lighten-4 right" href="#!">Repo</a>
+                    <a className="grey-text text-lighten-4 right" href="/">Repo</a>
                 </div>
             </div>
         </footer>

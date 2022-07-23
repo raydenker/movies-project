@@ -11,7 +11,7 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
+    fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
       .then((response) => {
         if (response.ok) {
           return response.json()
@@ -20,21 +20,17 @@ class Main extends React.Component {
       .then(
         (data) => {
           this.setState({ movies: data.Search, loading: false })
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          // setIsLoaded(true);
-          // setError(error);
-        },
-      )
+        }       
+      ).catch((err) => {
+        console.log(err);
+        this.setState({loading: false })
+      })
   }
   changeMovies = (inputValue, type = 'all') => {
     console.log(inputValue)
     this.setState({ loading: true })
     fetch(
-      `http://www.omdbapi.com/?apikey=${API_KEY}&s=${inputValue}${
+      `https://www.omdbapi.com/?apikey=${API_KEY}&s=${inputValue}${
         type !== 'all' ? `&type=${type}` : ''
       }`,
     )
