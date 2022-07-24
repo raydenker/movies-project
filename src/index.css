@@ -9,8 +9,16 @@ body {
 
 nav {
   padding: 0 1rem;
+  background-color: transparent;
 }
-
+.MuiPagination-ul{
+  justify-content: center;
+}
+/* 
+.MuiPagination-root {
+  box-shadow: none;
+  margin: 30px auto;
+} */
 .content {
   min-height: calc(100vh - 134px);
   padding: 1.5rem 0;

@@ -1,21 +1,37 @@
 import React from 'react'
+import Pagination from '@mui/material/Pagination'
+import Stack from '@mui/material/Stack'
 
 class Search extends React.Component {
   state = {
     search: '',
     type: 'all',
     subscription: '',
+    page: this.props.page,
   }
   handlKey = (e) => {
     if (e.key === 'Enter') {
-      this.props.changeMovies(this.state.search, this.state.type)
+      this.setState(
+        () => ({ page: 1 }),
+        () => {
+          this.props.changeMovies(
+            this.state.search,
+            this.state.type,
+            this.state.page,
+          )
+        },
+      )
     }
   }
   handleFilter = (e) => {
     this.setState(
-      () => ({ type: e.target.dataset.type }),
+      () => ({ type: e.target.dataset.type, page: 1 }),
       () => {
-        this.props.changeMovies(this.state.search, this.state.type)
+        this.props.changeMovies(
+          this.state.search,
+          this.state.type,
+          this.state.page,
+        )
       },
     )
     // this.setState({ [e.target.name]: e.target.checked })
@@ -23,6 +39,8 @@ class Search extends React.Component {
   render() {
     return (
       <div className="row">
+        {console.log(this.props.pages)}
+       
         <div className="col s12 Search">
           <div className="input-field">
             <input
@@ -84,6 +102,32 @@ class Search extends React.Component {
           />
           <span>Movie</span>
         </label>
+        <div className="col s12">
+        <Stack spacing={2}>
+          {!!this.props.pages && (
+            <Pagination
+              showFirstButton
+              showLastButton
+              sx={{ marginY: 4, marginX: 'auto' }}
+              count={+this.props.pages}
+              page={this.state.page}
+              onChange={(_, num) => {
+                this.setState(
+                  () => ({ page: num }),
+                  () => {
+                    this.props.changeMovies(
+                      this.state.search,
+                      this.state.type,
+                      this.state.page,
+                    )
+                  },
+                )
+              }}
+            />
+          )}
+        </Stack>
+        </div>
+       
       </div>
     )
   }

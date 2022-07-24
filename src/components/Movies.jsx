@@ -25,6 +25,7 @@ export default function Movies(props) {
           )}
         </Grid>
       </Box>
+      
     </Container>
   )
 }
