@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Movies } from '../components/Movies'
 import { Preloader } from '../components/Preloader'
 import { Search } from '../components/Search'
@@ -6,39 +6,19 @@ import { Search } from '../components/Search'
 // const API_KEY = process.env.REACT_APP_API_KEY
 const API_KEY2 = process.env.REACT_APP_API_KEY2
 const url = 'https://api.themoviedb.org/3/'
-class Main extends React.Component {
-  state = {
-    movies: [],
-    searchValue: '',
-    loading: true,
-    pages: '',
-    page: 1,
-  }
 
-  componentDidMount() {
-    fetch(`${url}trending/all/week?api_key=${API_KEY2}`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        }
-      })
-      .then((data) => {
-        console.log(data)
-        this.setState({
-          movies: data.results,
-          loading: false,
-          pages: data.total_pages,
-          page: data.page,
-        })
-      })
-      .catch((err) => {
-        console.log(err)
-        this.setState({ loading: false })
-      })
-  }
-  changeMovies = (inputValue, type = 'all', page) => {
-    console.log(page)
-    this.setState({ loading: true })
+const  Main = ()=> {
+ 
+  const [movies, setMovies] = useState([])
+  // const [searchValue, setSearchValue] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [pages, setPages] = useState(0)
+  const [page, setPage] = useState(1)
+
+ 
+  const changeMovies = (inputValue, type = 'all', page) => {
+    // this.setState({ loading: true })
+    setLoading(true)
     let typeAll = ''
     let searchUrl = ''
     if (inputValue) {
@@ -61,33 +41,46 @@ class Main extends React.Component {
       })
       .then(
         (data) => {
-          this.setState({
-            movies: data.results,
-            loading: false,
-            pages: data.total_pages,
-            page: data.page,
-          })
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
+          setMovies(data.results)
+          setLoading(false)
+          setPages(data.total_pages)
+          setPage(data.page)
+        
+        },       
         (error) => {
           // setIsLoaded(true);
           // setError(error);
         },
       )
+      .catch((err) => {
+        setLoading(false)      
+      })
   }
-
-  render() {
-    const { movies, loading, pages, page } = this.state
+  useEffect(()=> {
+    fetch(`${url}trending/all/week?api_key=${API_KEY2}`)
+    .then((response) => {
+      if (response.ok) {
+        return response.json()
+      }
+    })
+    .then((data) => {
+      setMovies(data.results)
+      setLoading(false)
+      setPages(data.total_pages)
+      setPage(data.page)     
+    })
+    .catch((err) => {
+      setLoading(false)      
+    })
+  }, [])
     return (
       <main>
-        <Search changeMovies={this.changeMovies} pages={pages} page={page} />
+        <Search changeMovies={changeMovies} pagesAll={pages} pages={page} />
         {loading ? <Preloader /> : <Movies movies={movies} />}
        
       </main>
     )
-  }
+ 
 }
 
 export { Main }

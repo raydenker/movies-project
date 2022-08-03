@@ -35,7 +35,7 @@ function Movie(props) {
               <CardMedia
                 component="img"
                 height="480"
-                image={`https://www.themoviedb.org/t/p/w600_and_h900_bestv2/${poster}`}
+                image={`https://www.themoviedb.org/t/p/w600_and_h900_bestv2${poster}`}
                 alt={Name || Title}
               />
             ) : (

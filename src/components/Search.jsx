@@ -1,46 +1,39 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Pagination from '@mui/material/Pagination'
 import Stack from '@mui/material/Stack'
 
-class Search extends React.Component {
-  state = {
-    search: '',
-    type: 'all',
-    subscription: '',
-    page: this.props.page,
-  }
-  handlKey = (e) => {
-    if (e.key === 'Enter') {
-      this.setState(
-        () => ({ page: 1 }),
-        () => {
-          this.props.changeMovies(
-            this.state.search,
-            this.state.type,
-            this.state.page,
-          )
-        },
-      )
+const Search = (props) => {
+  const {changeMovies = Function.prototype, pages, pagesAll
+  } = props
+ 
+  const [search, setSearch] = useState('')
+  const [type, setType] = useState('all')
+  const [page, setPage] = useState(pages)
+  // const [search, setSearch] = useState('')
+
+
+  const handlKey = (e) => {
+    if (e.key === 'Enter') {   
+      setPage(1)
+      changeMovies(
+        search,
+        type,
+        1,
+      )     
     }
   }
-  handleFilter = (e) => {
-    this.setState(
-      () => ({ type: e.target.dataset.type, page: 1 }),
-      () => {
-        this.props.changeMovies(
-          this.state.search,
-          this.state.type,
-          this.state.page,
-        )
-      },
-    )
-    // this.setState({ [e.target.name]: e.target.checked })
+  const handleFilter = (e) => {   
+      setType(e.target.dataset.type);     
+      setPage(1)
+      changeMovies(
+        search,
+        e.target.dataset.type,
+         1,
+       );   
   }
-  render() {
+
     return (
-      <div className="row">
-        {console.log(this.props.pages)}
-       
+      <div className="row">       
         <div className="col s12 Search">
           <div className="input-field">
             <input
@@ -49,14 +42,14 @@ class Search extends React.Component {
               type="search"
               placeholder="Search"
               className="validate"
-              value={this.state.search}
-              onChange={(e) => this.setState({ search: e.target.value })}
-              onKeyDown={this.handlKey}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handlKey}
             />
             <button
               className="btn"
               onClick={() =>
-                this.props.changeMovies(this.state.search, this.state.type)
+                changeMovies(search, type, page)
               }
             >
               Search
@@ -71,8 +64,8 @@ class Search extends React.Component {
             type="radio"
             value=""
             data-type="all"
-            checked={this.state.type === 'all'}
-            onChange={this.handleFilter}
+            checked={type === 'all'}
+            onChange={handleFilter}
           />
           <span>All</span>
         </label>
@@ -84,8 +77,8 @@ class Search extends React.Component {
             type="radio"
             data-type="tv"
             value="tv"
-            checked={this.state.type === 'tv'}
-            onChange={this.handleFilter}
+            checked={type === 'tv'}
+            onChange={handleFilter}
           />
           <span>Series</span>
         </label>
@@ -97,31 +90,28 @@ class Search extends React.Component {
             type="radio"
             data-type="movie"
             value="movie"
-            checked={this.state.type === 'movie'}
-            onChange={this.handleFilter}
+            checked={type === 'movie'}
+            onChange={handleFilter}
           />
           <span>Movie</span>
         </label>
         <div className="col s12">
         <Stack spacing={2}>
-          {!!this.props.pages && (
+          {!!pagesAll && (
             <Pagination
               showFirstButton
               showLastButton
               sx={{ marginY: 4, marginX: 'auto' }}
-              count={+this.props.pages}
-              page={this.state.page}
+              count={+pagesAll}
+              page={page}
               onChange={(_, num) => {
-                this.setState(
-                  () => ({ page: num }),
-                  () => {
-                    this.props.changeMovies(
-                      this.state.search,
-                      this.state.type,
-                      this.state.page,
-                    )
-                  },
-                )
+                console.log(num);
+                setPage(num)
+                changeMovies(
+                search,
+                 type,
+                 num,
+                )               
               }}
             />
           )}
@@ -130,6 +120,6 @@ class Search extends React.Component {
        
       </div>
     )
-  }
+ 
 }
 export { Search }
